@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="EmptyField" xml:space="preserve">
+        <value>The '{0}' field is a required field.</value>
+    </data>
+    <data name="LengthError" xml:space="preserve">
+        <value>The '{0}' field must be a string with a mininum length of {2} and a maximum length of {1} and.</value>
+    </data>
+    <data name="MaxLengthError" xml:space="preserve">
+        <value>The '{0}' field must be a string with a maximum length of {1}.</value>
+    </data>
+    <data name="DateNotInRange" xml:space="preserve">
+        <value>The '{0}' field must be a date between {1} and today.</value>
+    </data>
+    <data name="UrlError" xml:space="preserve">
+        <value>The '{0}' field must be a valid URL.</value>
+    </data>
+    <data name="PhoneError" xml:space="preserve">
+        <value>The '{0}' field must be a valid phone number.</value>
+    </data>
+    <data name="RangeError" xml:space="preserve">
+        <value>The '{0}' field must be between {1} and {2}.</value>
+    </data>
+    <data name="DateOutOfRange" xml:space="preserve">
+        <value>The '{0}' field must be a date between {1} and {2}.</value>
+    </data>
+    <data name="MinimumValueError" xml:space="preserve">
+        <value>The '{0}' field must be at least {1}.</value>
+    </data>
+    <data name="PasswordMismatch" xml:space="preserve">
+        <value>Passwords do not match.</value>
+    </data>
+    <data name="UsernameError" xml:space="preserve">
+        <value>Username must be between 3 and 50 characters.</value>
+    </data>
+    <data name="EmailError" xml:space="preserve">
+        <value>Must be a valid email.</value>
+    </data>
+    <data name="PasswordError" xml:space="preserve">
+        <value>Password must be between 8 and 100 characters.</value>
+    </data>
+</root>

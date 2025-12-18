@@ -1,0 +1,6 @@
+@LivriaBackend_HostAddress = http://localhost:5119
+
+GET {{LivriaBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
