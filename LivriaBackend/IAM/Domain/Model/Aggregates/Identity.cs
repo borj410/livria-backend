@@ -44,9 +44,9 @@ public class Identity
             throw new ArgumentException("Username must be between 3 and 50 characters.");
         }
         
-        if (string.IsNullOrWhiteSpace(hashedPassword) || hashedPassword.Length < 8 || hashedPassword.Length > 100)
+        if (string.IsNullOrWhiteSpace(hashedPassword) || hashedPassword.Length < 3 || hashedPassword.Length > 100)
         {
-            throw new ArgumentException("Password must be between 8 and 100 characters.");
+            throw new ArgumentException("Password must be between 3 and 100 characters.");
         }
         
         UserId = userid;
@@ -82,9 +82,9 @@ public class Identity
     
     public void UpdatePassword(string currentPassword, string newPassword)
     {
-        if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 8 || newPassword.Length > 100)
+        if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 3 || newPassword.Length > 100)
         {
-            throw new ArgumentException("Password must be between 8 and 100 characters.");
+            throw new ArgumentException("Password must be between 3 and 100 characters.");
         }
 
         if (!VerifyPassword(currentPassword))

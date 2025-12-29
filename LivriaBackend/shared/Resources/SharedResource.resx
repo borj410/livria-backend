@@ -55,6 +55,6 @@
         <value>The '{0}' field must be a valid phone number.</value>
     </data>
     <data name="PasswordError" xml:space="preserve">
-        <value>Password must be between 8 and 100 characters.</value>
+        <value>Password must be between 3 and 100 characters.</value>
     </data>
 </root>

@@ -34,7 +34,7 @@
         <value>El campo '{0}' debe ser una URL válida.</value>
     </data>
     <data name="PhoneError" xml:space="preserve">
-        <value>El c'{0}' must be a valid phone number.</value>
+        <value>El campo '{0}' debe ser un número de teléfono válido.</value>
     </data>
     <data name="RangeError" xml:space="preserve">
         <value>El campo '{0}' debe estar entre {1} y {2}.</value>
@@ -55,6 +55,6 @@
         <value>Debe ser un email válido.</value>
     </data>
     <data name="PasswordError" xml:space="preserve">
-        <value>La contraseña debe tener entre 8 y 100 caracteres.</value>
+        <value>La contraseña debe tener entre 3 y 100 caracteres.</value>
     </data>
 </root>

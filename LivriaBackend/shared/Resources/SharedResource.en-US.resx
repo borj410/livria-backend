@@ -55,6 +55,6 @@
         <value>Must be a valid email.</value>
     </data>
     <data name="PasswordError" xml:space="preserve">
-        <value>Password must be between 8 and 100 characters.</value>
+        <value>Password must be between 3 and 100 characters.</value>
     </data>
 </root>

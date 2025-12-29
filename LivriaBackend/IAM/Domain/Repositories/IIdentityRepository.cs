@@ -11,7 +11,6 @@ namespace LivriaBackend.IAM.Domain.Repositories
         Task AddAsync(Identity identity);
         Task UpdateAsync(Identity identity);
         Task DeleteAsync(Identity identity);
-
         Task<bool> ExistsByUsernameAsync(string username);
         Task<Identity> GetByUserIdAsync(int userId);
     }

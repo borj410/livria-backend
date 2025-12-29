@@ -123,7 +123,7 @@ namespace LivriaBackend.shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password must be between 8 and 100 characters..
+        ///   Looks up a localized string similar to Password must be between 3 and 100 characters..
         /// </summary>
         internal static string PasswordError {
             get {
