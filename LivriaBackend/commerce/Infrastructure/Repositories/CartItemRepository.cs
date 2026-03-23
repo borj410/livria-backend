@@ -56,7 +56,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// </summary>
         /// <param name="cartItem">El objeto <see cref="CartItem"/> a añadir.</param>
         /// <returns>Una tarea que representa la operación asíncrona.</returns>
-        public async Task AddAsync(CartItem cartItem)
+        public new async Task AddAsync(CartItem cartItem)
         {
             await this.Context.CartItems.AddAsync(cartItem);
         }
@@ -71,7 +71,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// lo que indica a Entity Framework Core que la entidad ha sido modificada y debe ser guardada.
         /// La persistencia se realiza con <c>UnitOfWork</c>.
         /// </remarks>
-        public async Task UpdateAsync(CartItem cartItem)
+        public new async Task UpdateAsync(CartItem cartItem)
         {
             this.Context.Entry(cartItem).State = EntityState.Modified;
             await Task.CompletedTask; 
@@ -98,7 +98,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// <param name="bookId">El identificador del libro.</param>
         /// <param name="userClientId">El identificador del cliente de usuario.</param>
         /// <returns>Una tarea que representa la operación asíncrona. El resultado de la tarea es el <see cref="CartItem"/> encontrado, o null si no existe.</returns>
-        public async Task<CartItem> FindByBookAndUserAsync(int bookId, int userClientId)
+        public new async Task<CartItem> FindByBookAndUserAsync(int bookId, int userClientId)
         {
             return await this.Context.CartItems
                 .Where(ci => ci.BookId == bookId && ci.UserClientId == userClientId)

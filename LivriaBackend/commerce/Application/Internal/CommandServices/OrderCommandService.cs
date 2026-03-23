@@ -135,9 +135,9 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
             foreach (var cartItem in cartItems)
             {
                 var book = await _bookRepository.GetByIdAsync(cartItem.BookId);
-                if (book == null)
+                if (book == null || !book.IsActive)
                 {
-                    throw new ArgumentException($"Book with ID {cartItem.BookId} for CartItem {cartItem.Id} not found.", nameof(cartItem.BookId));
+                    throw new InvalidOperationException($"The book '{book?.Title ?? "Unknown"}' is no longer available for sale.");
                 }
 
                 if (book.Stock < cartItem.Quantity)

@@ -42,7 +42,7 @@ namespace LivriaBackend.commerce.Domain.Repositories
         /// </summary>
         /// <param name="title">El título del libro.</param>
         /// <returns>True si existe un libro con el mismo título, de lo contrario False.</returns>
-        Task<bool> ExistsByTitleAsync(string title); // Método modificado
+        Task<bool> ExistsByTitleAsync(string title);
         
         Task DeleteAsync(Book book);
         

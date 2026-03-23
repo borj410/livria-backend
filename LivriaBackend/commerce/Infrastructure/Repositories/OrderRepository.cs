@@ -72,7 +72,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// </summary>
         /// <param name="order">El objeto <see cref="Order"/> a añadir.</param>
         /// <returns>Una tarea que representa la operación asíncrona.</returns>
-        public async Task AddAsync(Order order)
+        public new async Task AddAsync(Order order)
         {
             await this.Context.Set<Order>().AddAsync(order); 
         }
@@ -87,7 +87,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// lo que indica a Entity Framework Core que la entidad ha sido modificada y debe ser guardada.
         /// La persistencia se realiza con <c>UnitOfWork</c>.
         /// </remarks>
-        public async Task UpdateAsync(Order order)
+        public new async Task UpdateAsync(Order order)
         {
             this.Context.Entry(order).State = EntityState.Modified;
             await Task.CompletedTask;

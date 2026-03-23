@@ -92,5 +92,4 @@ public class Identity
         
         HashedPassword = new PasswordHash(newPassword);
     }
-
 }

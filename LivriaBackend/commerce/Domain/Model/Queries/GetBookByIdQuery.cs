@@ -1,6 +1,8 @@
-﻿namespace LivriaBackend.commerce.Domain.Model.Queries
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace LivriaBackend.commerce.Domain.Model.Queries
 {
     public record GetBookByIdQuery(
-        int BookId
+        [Required] int BookId
     );
 }

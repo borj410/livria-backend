@@ -7,7 +7,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         int BookId,
         
         [Required(ErrorMessage = "EmptyField")]
-        [Range(1, 10, ErrorMessage = "Quantity must be between 1 and 10.")] 
+        [Range(1, 5, ErrorMessage = "Quantity must be between 1 and 5.")] 
         int Quantity,
         
         [Required(ErrorMessage = "EmptyField")]

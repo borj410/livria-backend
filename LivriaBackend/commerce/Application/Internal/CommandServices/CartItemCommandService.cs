@@ -57,6 +57,7 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
         public async Task<CartItem> Handle(CreateCartItemCommand command)
         {
             var book = await _bookRepository.GetByIdAsync(command.BookId);
+            
             if (book == null)
             {
                 throw new ArgumentException($"Book with ID {command.BookId} not found.");
@@ -74,16 +75,14 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
             {
                 existingCartItem.UpdateQuantity(existingCartItem.Quantity + command.Quantity);
                 await _cartItemRepository.UpdateAsync(existingCartItem);
-                await _unitOfWork.CompleteAsync();
-                return existingCartItem;
             }
             else
             {
                 var cartItem = new CartItem(command.BookId, command.Quantity, command.UserClientId);
                 await _cartItemRepository.AddAsync(cartItem);
-                await _unitOfWork.CompleteAsync();
-                return cartItem;
             }
+            await _unitOfWork.CompleteAsync();
+            return existingCartItem;
         }
 
         /// <summary>

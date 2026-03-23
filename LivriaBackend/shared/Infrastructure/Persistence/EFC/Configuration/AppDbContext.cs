@@ -181,6 +181,7 @@ namespace LivriaBackend.shared.Infrastructure.Persistence.EFC.Configuration
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasIndex(ci => new { ci.BookId, ci.UserClientId }).IsUnique();
+                entity.HasQueryFilter(ci => ci.Book.IsActive);
             });
 
             modelBuilder.Entity<Order>(entity =>

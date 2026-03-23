@@ -41,7 +41,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// Sobrescribe el método base para incluir la carga ansiosa de la colección <see cref="Book.Reviews"/>.
         /// </summary>
         /// <returns>Una tarea que representa la operación asíncrona. El resultado de la tarea es una colección de todos los <see cref="Book"/> con sus reseñas.</returns>
-        public new async Task<IEnumerable<Book>> GetAllAsync()
+        public async Task<IEnumerable<Book>> GetAllAsync()
         {
             return await this.Context.Books
                 .ToListAsync();
@@ -52,7 +52,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// </summary>
         /// <param name="book">El objeto <see cref="Book"/> a añadir.</param>
         /// <returns>Una tarea que representa la operación asíncrona.</returns>
-        public async Task AddAsync(Book book)
+        public new async Task AddAsync(Book book)
         {
             await this.Context.Books.AddAsync(book);
         }
@@ -68,7 +68,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// No realiza una operación asíncrona de base de datos directa, sino que prepara el contexto.
         /// La persistencia se realiza con <c>UnitOfWork</c>.
         /// </remarks>
-        public async Task UpdateAsync(Book book) 
+        public new async Task UpdateAsync(Book book) 
         {
             this.Context.Entry(book).State = EntityState.Modified;
             await Task.CompletedTask; 
@@ -79,7 +79,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// </summary>
         /// <param name="title">El título del libro.</param>
         /// <returns>True si existe un libro con el mismo título, de lo contrario False.</returns>
-        public async Task<bool> ExistsByTitleAsync(string title) 
+        public new async Task<bool> ExistsByTitleAsync(string title) 
         {
             return await Context.Books.AnyAsync(b =>
                 b.Title.ToLower() == title.ToLower());

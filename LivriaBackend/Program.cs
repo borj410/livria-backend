@@ -131,13 +131,17 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader());
 });
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Conexión con base de datos (con variable de sistema)
+var baseCredentials = builder.Configuration.GetConnectionString("DefaultConnection");
+var dbName = builder.Configuration.GetConnectionString("DbName");
 
-if (string.IsNullOrEmpty(connectionString))
+var finalConnectionString = $"{baseCredentials}database={dbName};";
+
+if (string.IsNullOrEmpty(finalConnectionString))
     throw new InvalidOperationException("Database connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySQL(connectionString));
+    options.UseMySQL(finalConnectionString));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -338,7 +342,7 @@ using (var scope = app.Services.CreateScope())
                 UserConstants.DeletedUsername,
                 UserConstants.DeletedUserEmail,
                 UserConstants.DeletedUserIcon,
-                "Usuario Anónimo del Sistema",
+                "Deleted user.",
                 "freeplan"
             );
             

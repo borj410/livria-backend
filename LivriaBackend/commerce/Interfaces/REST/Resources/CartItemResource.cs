@@ -8,7 +8,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         
         BookResource Book, 
         
-        [Range(0, 3, ErrorMessage = "RangeError")]
+        [Range(0, 5, ErrorMessage = "RangeError")]
         int Quantity,
         
         [Range(0, int.MaxValue, ErrorMessage = "MinimumValueError")]

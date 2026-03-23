@@ -32,6 +32,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         public new async Task<Review> GetByIdAsync(int id)
         {
             return await this.Context.Reviews
+                .IgnoreQueryFilters()
                 .Include(r => r.Book)
                 .Include(r => r.UserClient) 
                 .FirstOrDefaultAsync(r => r.Id == id);
@@ -45,6 +46,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         public new async Task<IEnumerable<Review>> GetAllAsync()
         {
             return await this.Context.Reviews
+                .IgnoreQueryFilters()
                 .Include(r => r.Book)
                 .Include(r => r.UserClient) 
                 .ToListAsync();
@@ -74,6 +76,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         public async Task<IEnumerable<Review>> GetByBookIdAsync(int bookId)
         {
             return await this.Context.Reviews
+                .IgnoreQueryFilters()
                 .Include(r => r.Book) 
                 .Include(r => r.UserClient) 
                 .Where(r => r.BookId == bookId) 
@@ -83,6 +86,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         public async Task<IEnumerable<Review>> GetReviewsByUserIdAsync(int userClientId)
         {
             return await Context.Reviews
+                .IgnoreQueryFilters()
                 .Where(r => r.UserClientId == userClientId)
                 .ToListAsync();
         }

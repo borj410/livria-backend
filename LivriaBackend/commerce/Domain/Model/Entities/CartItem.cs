@@ -27,10 +27,10 @@ namespace LivriaBackend.commerce.Domain.Model.Entities
 
         /// <summary>
         /// Obtiene la cantidad del libro en este ítem del carrito.
-        /// Este valor es mutable a través de métodos de comportamiento y debe estar entre 1 y 3.
+        /// Este valor es mutable a través de métodos de comportamiento y debe estar entre 1 y 5.
         /// </summary>
         [Required(ErrorMessage = "EmptyField")]
-        [Range(1, 10, ErrorMessage = "Quantity must be between 1 and 10.")] 
+        [Range(1, 5, ErrorMessage = "Quantity must be between 1 and 5.")] 
         public int Quantity { get; private set; } 
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace LivriaBackend.commerce.Domain.Model.Entities
         /// Inicializa una nueva instancia de la clase <see cref="CartItem"/>.
         /// </summary>
         /// <param name="bookId">El identificador del libro.</param>
-        /// <param name="quantity">La cantidad del libro. Debe ser de 1 a 3.</param>
+        /// <param name="quantity">La cantidad del libro. Debe ser de 1 a 5.</param>
         /// <param name="userClientId">El identificador del cliente de usuario.</param>
         /// <exception cref="ArgumentOutOfRangeException">Se lanza si la cantidad está fuera del rango permitido.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Se lanza si BookId o UserClientId no son positivos.</exception>
@@ -61,9 +61,9 @@ namespace LivriaBackend.commerce.Domain.Model.Entities
         {
             if (bookId <= 0) throw new ArgumentOutOfRangeException(nameof(bookId), "BookId must be positive.");
             if (userClientId <= 0) throw new ArgumentOutOfRangeException(nameof(userClientId), "UserClientId must be positive.");
-            if (quantity < 1 || quantity > 3) 
+            if (quantity < 1 || quantity > 5) 
             {
-                throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity must be between 1 and 10.");
+                throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity must be between 1 and 5.");
             }
 
             BookId = bookId;
@@ -74,19 +74,19 @@ namespace LivriaBackend.commerce.Domain.Model.Entities
         /// <summary>
         /// Actualiza la cantidad de este ítem del carrito a un nuevo valor.
         /// </summary>
-        /// <param name="newQuantity">La nueva cantidad deseada. Debe ser de 1 a 10.</param>
+        /// <param name="newQuantity">La nueva cantidad deseada. Debe ser de 1 a 5.</param>
         /// <exception cref="ArgumentOutOfRangeException">Se lanza si la nueva cantidad está fuera del rango permitido.</exception>
         public void UpdateQuantity(int newQuantity)
         {
-            if (newQuantity < 1 || newQuantity > 10) 
+            if (newQuantity < 1 || newQuantity > 5) 
             {
-                throw new ArgumentOutOfRangeException(nameof(newQuantity), "Quantity must be between 1 and 10.");
+                throw new ArgumentOutOfRangeException(nameof(newQuantity), "Quantity must be between 1 and 5.");
             }
             Quantity = newQuantity;
         }
 
         /// <summary>
-        /// Incrementa la cantidad de este ítem del carrito por un valor especificado, sin exceder 3.
+        /// Incrementa la cantidad de este ítem del carrito por un valor especificado, sin exceder 5.
         /// </summary>
         /// <param name="amount">La cantidad a incrementar (por defecto es 1).</param>
         /// <exception cref="ArgumentOutOfRangeException">Se lanza si la cantidad a incrementar es negativa.</exception>
@@ -96,7 +96,7 @@ namespace LivriaBackend.commerce.Domain.Model.Entities
             {
                 throw new ArgumentOutOfRangeException(nameof(amount), "Amount to increment cannot be negative.");
             }
-            Quantity = Math.Min(Quantity + amount, 3); 
+            Quantity = Math.Min(Quantity + amount, 5); 
         }
 
         /// <summary>

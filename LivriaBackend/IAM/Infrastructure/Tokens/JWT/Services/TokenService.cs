@@ -40,8 +40,7 @@ public class TokenService(IOptions<TokenSettings> tokenSettings) : ITokenService
             new Claim(ClaimTypes.Sid, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.UserName)
         };
-
-        // ¡NUEVO! Añadir claims para cada rol
+        
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
