@@ -59,9 +59,16 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         public async Task<ActionResult<IEnumerable<UserAdminResource>>> GetAllUserAdmins()
         {
             var query = new GetAllUserAdminQuery();
-            var userAdmins = await _userAdminQueryService.Handle(query);
-            var userAdminResources = _mapper.Map<IEnumerable<UserAdminResource>>(userAdmins);
-            return Ok(userAdminResources);
+            try
+            {
+                var userAdmins = await _userAdminQueryService.Handle(query);
+                var userAdminResources = _mapper.Map<IEnumerable<UserAdminResource>>(userAdmins ?? new List<Domain.Model.Aggregates.UserAdmin>());
+                return Ok(userAdminResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving user admins.");
+            }
         }
 
         /// <summary>

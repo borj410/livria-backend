@@ -40,9 +40,16 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
         [ProducesResponseType(typeof(IEnumerable<PostResource>), 200)]
         public async Task<IActionResult> GetPostsByUserId(int userId)
         {
-            var posts = await _postQueryService.GetPostsByUserIdAsync(userId);
-            var postResources = _mapper.Map<IEnumerable<PostResource>>(posts);
-            return Ok(postResources);
+            try
+            {
+                var posts = await _postQueryService.GetPostsByUserIdAsync(userId);
+                var postResources = _mapper.Map<IEnumerable<PostResource>>(posts ?? new List<Domain.Model.Aggregates.Post>());
+                return Ok(postResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving user posts.");
+            }
         }
 
         /// <summary>
@@ -52,9 +59,16 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
         [ProducesResponseType(typeof(IEnumerable<CommentResource>), 200)]
         public async Task<IActionResult> GetCommentsByUserId(int userId)
         {
-            var comments = await _commentQueryService.GetCommentsByUserIdAsync(userId);
-            var commentResources = _mapper.Map<IEnumerable<CommentResource>>(comments);
-            return Ok(commentResources);
+            try
+            {
+                var comments = await _commentQueryService.GetCommentsByUserIdAsync(userId);
+                var commentResources = _mapper.Map<IEnumerable<CommentResource>>(comments ?? new List<Domain.Model.Aggregates.Comment>());
+                return Ok(commentResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving user comments.");
+            }
         }
         
         /// <summary>
@@ -64,9 +78,16 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
         [ProducesResponseType(typeof(IEnumerable<CommunityResource>), 200)]
         public async Task<IActionResult> GetOwnedCommunitiesByUserId(int userId)
         {
-            var communities = await _communityQueryService.GetCommunitiesByOwnerIdAsync(userId);
-            var communityResources = _mapper.Map<IEnumerable<CommunityResource>>(communities);
-            return Ok(communityResources);
+            try
+            {
+                var communities = await _communityQueryService.GetCommunitiesByOwnerIdAsync(userId);
+                var communityResources = _mapper.Map<IEnumerable<CommunityResource>>(communities ?? new List<Domain.Model.Aggregates.Community>());
+                return Ok(communityResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving owned communities.");
+            }
         }
     }
 }

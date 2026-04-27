@@ -59,9 +59,16 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         public async Task<ActionResult<IEnumerable<BookResource>>> GetAllBooks()
         {
             var query = new GetAllBooksQuery();
-            var books = await _bookQueryService.Handle(query);
-            var bookResources = _mapper.Map<IEnumerable<BookResource>>(books);
-            return Ok(bookResources);
+            try
+            {
+                var books = await _bookQueryService.Handle(query);
+                var bookResources = _mapper.Map<IEnumerable<BookResource>>(books ?? new List<Domain.Model.Aggregates.Book>());
+                return Ok(bookResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving books.");
+            }
         }
         
         /// <summary>
@@ -112,6 +119,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
             try
             {
                 var book = await _bookCommandService.Handle(createCommand); 
+                if (book == null)
+                {
+                    return BadRequest(new { message = "Could not create book. Check provided data." });
+                }
 
                 var bookResource = _mapper.Map<BookResource>(book);
                 return CreatedAtAction(nameof(GetBookById), new { id = book.Id }, bookResource);
@@ -241,9 +252,16 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         public async Task<IActionResult> GetDeletedBooks()
         {
             var query = new GetDeletedBooksQuery();
-            var books = await _bookQueryService.Handle(query);
-            var resources = _mapper.Map<IEnumerable<BookResource>>(books);
-            return Ok(resources);
+            try
+            {
+                var books = await _bookQueryService.Handle(query);
+                var resources = _mapper.Map<IEnumerable<BookResource>>(books ?? new List<Domain.Model.Aggregates.Book>());
+                return Ok(resources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving deleted books.");
+            }
         }
         
         [Authorize(Roles = "Admin")]

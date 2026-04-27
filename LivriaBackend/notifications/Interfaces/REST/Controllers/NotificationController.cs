@@ -68,7 +68,25 @@ namespace LivriaBackend.notifications.Interfaces.REST.Controllers
                 createCommand = createCommand with { CreatedAt = DateTime.UtcNow };
             }
 
-            Notification notification = await _notificationCommandService.Handle(createCommand);
+            Notification notification;
+            try
+            {
+                notification = await _notificationCommandService.Handle(createCommand);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred while creating the notification: " + ex.Message });
+            }
+
+            if (notification == null)
+            {
+                return BadRequest(new { message = "Could not create notification. Check provided data." });
+            }
+
             var notificationResource = _mapper.Map<NotificationResource>(notification);
             return CreatedAtAction(nameof(GetNotificationById), new { id = notification.Id }, notificationResource);
         }
@@ -89,10 +107,17 @@ namespace LivriaBackend.notifications.Interfaces.REST.Controllers
         [ProducesResponseType(typeof(IEnumerable<NotificationResource>), 200)]
         public async Task<ActionResult<IEnumerable<NotificationResource>>> GetActiveNotificationsByUserId(int userClientId)
         {
-            var query = new GetAllNotificationsByUserIdQuery(userClientId); 
-            var notifications = await _notificationQueryService.Handle(query);
-            var resources = _mapper.Map<IEnumerable<NotificationResource>>(notifications);
-            return Ok(resources);
+            var query = new GetAllNotificationsByUserIdQuery(userClientId);
+            try
+            {
+                var notifications = await _notificationQueryService.Handle(query);
+                var resources = _mapper.Map<IEnumerable<NotificationResource>>(notifications ?? new List<Domain.Model.Aggregates.Notification>());
+                return Ok(resources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving notifications.");
+            }
         }
 
         /// <summary>
@@ -113,15 +138,22 @@ namespace LivriaBackend.notifications.Interfaces.REST.Controllers
         public async Task<ActionResult<NotificationResource>> GetNotificationById(int id)
         {
             var query = new GetNotificationByIdQuery(id);
-            var notification = await _notificationQueryService.Handle(query);
-
-            if (notification == null)
+            try
             {
-                return NotFound();
-            }
+                var notification = await _notificationQueryService.Handle(query);
 
-            var resource = _mapper.Map<NotificationResource>(notification);
-            return Ok(resource);
+                if (notification == null)
+                {
+                    return NotFound();
+                }
+
+                var resource = _mapper.Map<NotificationResource>(notification);
+                return Ok(resource);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving the notification.");
+            }
         }
 
         /// <summary>

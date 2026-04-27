@@ -66,6 +66,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
             try
             {
                 var order = await _orderCommandService.Handle(command);
+                if (order == null)
+                {
+                    return BadRequest(new { message = "Could not create order. Check provided data." });
+                }
                 var orderResource = _mapper.Map<OrderResource>(order);
                 return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, orderResource);
             }
@@ -180,9 +184,16 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         public async Task<ActionResult<IEnumerable<OrderResource>>> GetOrdersByUserId(int userClientId)
         {
             var query = new GetOrdersByUserIdQuery(userClientId);
-            var orders = await _orderQueryService.Handle(query);
-            var orderResources = _mapper.Map<IEnumerable<OrderResource>>(orders);
-            return Ok(orderResources);
+            try
+            {
+                var orders = await _orderQueryService.Handle(query);
+                var orderResources = _mapper.Map<IEnumerable<OrderResource>>(orders ?? new List<Domain.Model.Aggregates.Order>());
+                return Ok(orderResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving user orders.");
+            }
         }
 
         /// <summary>

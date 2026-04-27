@@ -135,9 +135,16 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
         [ProducesResponseType(typeof(IEnumerable<PostResource>), 200)]
         public async Task<ActionResult<IEnumerable<PostResource>>> GetAllPosts()
         {
-            var posts = await _postQueryService.Handle(new GetAllPostsQuery());
-            var postResources = _mapper.Map<IEnumerable<PostResource>>(posts);
-            return Ok(postResources);
+            try
+            {
+                var posts = await _postQueryService.Handle(new GetAllPostsQuery());
+                var postResources = _mapper.Map<IEnumerable<PostResource>>(posts ?? new List<Domain.Model.Aggregates.Post>());
+                return Ok(postResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving posts.");
+            }
         }
         
         /// <summary>

@@ -96,9 +96,16 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
         public async Task<ActionResult<IEnumerable<CommunityResource>>> GetAllCommunities()
         {
             var query = new GetAllCommunitiesQuery();
-            var communities = await _communityQueryService.Handle(query);
-            var communityResources = _mapper.Map<IEnumerable<Community>, IEnumerable<CommunityResource>>(communities);
-            return Ok(communityResources);
+            try
+            {
+                var communities = await _communityQueryService.Handle(query);
+                var communityResources = _mapper.Map<IEnumerable<Community>, IEnumerable<CommunityResource>>(communities ?? new List<Domain.Model.Aggregates.Community>());
+                return Ok(communityResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving communities.");
+            }
         }
 
         /// <summary>
@@ -154,6 +161,10 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             try
             {
                 var userCommunity = await _userCommunityCommandService.Handle(command);
+                if (userCommunity == null)
+                {
+                    return BadRequest(new { message = "Could not join community. Check provided data." });
+                }
                 var userCommunityResource = _mapper.Map<UserCommunity, UserCommunityResource>(userCommunity);
                 return CreatedAtAction(nameof(JoinCommunity), userCommunityResource);
             }

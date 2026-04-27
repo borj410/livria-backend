@@ -71,18 +71,23 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
 
             var existingCartItem = await _cartItemRepository.FindByBookAndUserAsync(command.BookId, command.UserClientId);
 
+            CartItem resultCartItem;
+
             if (existingCartItem != null)
             {
                 existingCartItem.UpdateQuantity(existingCartItem.Quantity + command.Quantity);
                 await _cartItemRepository.UpdateAsync(existingCartItem);
+                resultCartItem = existingCartItem;
             }
             else
             {
                 var cartItem = new CartItem(command.BookId, command.Quantity, command.UserClientId);
                 await _cartItemRepository.AddAsync(cartItem);
+                resultCartItem = cartItem;
             }
+
             await _unitOfWork.CompleteAsync();
-            return existingCartItem;
+            return resultCartItem;
         }
 
         /// <summary>

@@ -83,6 +83,15 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred while creating review: " + ex.Message });
+            }
+
+            if (review == null)
+            {
+                return BadRequest(new { message = "Could not create review. Check provided data." });
+            }
 
             var reviewResource = _mapper.Map<ReviewResource>(review);
             return CreatedAtAction(nameof(GetReviewById), new { id = review.Id }, reviewResource);
@@ -105,9 +114,16 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         public async Task<ActionResult<IEnumerable<ReviewResource>>> GetAllReviews()
         {
             var query = new GetAllReviewsQuery();
-            var reviews = await _reviewQueryService.Handle(query);
-            var reviewResources = _mapper.Map<IEnumerable<ReviewResource>>(reviews);
-            return Ok(reviewResources);
+            try
+            {
+                var reviews = await _reviewQueryService.Handle(query);
+                var reviewResources = _mapper.Map<IEnumerable<ReviewResource>>(reviews ?? new List<Domain.Model.Entities.Review>());
+                return Ok(reviewResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving reviews.");
+            }
         }
 
         /// <summary>
@@ -156,15 +172,20 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         public async Task<ActionResult<IEnumerable<ReviewResource>>> GetReviewsByBookId(int bookId)
         {
             var query = new GetReviewsByBookIdQuery(bookId);
-            var reviews = await _reviewQueryService.Handle(query);
-
-            if (reviews == null) 
+            try
             {
-                return Ok(Enumerable.Empty<ReviewResource>()); 
+                var reviews = await _reviewQueryService.Handle(query);
+                if (reviews == null)
+                {
+                    return Ok(Enumerable.Empty<ReviewResource>());
+                }
+                var resources = _mapper.Map<IEnumerable<ReviewResource>>(reviews);
+                return Ok(resources);
             }
-
-            var resources = _mapper.Map<IEnumerable<ReviewResource>>(reviews);
-            return Ok(resources);
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving reviews for the book.");
+            }
         }
         
         /// <summary>
@@ -181,11 +202,16 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetReviewsByUserId(int userClientId)
         {
-            var reviews = await _reviewQueryService.GetReviewsByUserIdAsync(userClientId);
-            
-            var reviewResources = _mapper.Map<IEnumerable<ReviewResource>>(reviews);
-            
-            return Ok(reviewResources);
+            try
+            {
+                var reviews = await _reviewQueryService.GetReviewsByUserIdAsync(userClientId);
+                var reviewResources = _mapper.Map<IEnumerable<ReviewResource>>(reviews ?? new List<Domain.Model.Entities.Review>());
+                return Ok(reviewResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving user reviews.");
+            }
         }
         
         /// <summary>

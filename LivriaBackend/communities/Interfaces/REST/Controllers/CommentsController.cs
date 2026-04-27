@@ -42,11 +42,26 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
                 resource.UserId,
                 resource.Content
             );
-            
-            var comment = await _commentCommandService.Handle(command);
-            
-            var commentResource = _mapper.Map<CommentResource>(comment);
-            return StatusCode(201, commentResource);
+            try
+            {
+                var comment = await _commentCommandService.Handle(command);
+
+                if (comment == null)
+                {
+                    return BadRequest(new { message = "Could not create comment." });
+                }
+
+                var commentResource = _mapper.Map<CommentResource>(comment);
+                return StatusCode(201, commentResource);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while creating the comment.");
+            }
         }
         
         [HttpDelete("{commentId}")]
@@ -79,10 +94,21 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
         public async Task<ActionResult<IEnumerable<CommentResource>>> GetCommentsByPostId(int postId)
         {
             var query = new GetCommentsByPostIdQuery(postId);
-            var comments = await _commentQueryService.Handle(query);
-            
-            var resources = _mapper.Map<IEnumerable<CommentResource>>(comments);
-            return Ok(resources);
+            try
+            {
+                var comments = await _commentQueryService.Handle(query);
+
+                var resources = _mapper.Map<IEnumerable<CommentResource>>(comments ?? new List<Domain.Model.Aggregates.Comment>());
+                return Ok(resources);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving comments.");
+            }
         }
     }
 }

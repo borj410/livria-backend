@@ -39,36 +39,72 @@ namespace LivriaBackend.IAM.Interfaces.REST.Controllers
                 request.Icon,
                 request.Phrase
             );
-            var result = await _mediator.Send(command);
-            if (result == null)
+
+            try
             {
-                return BadRequest(new { message = "Registration failed." });
+                var result = await _mediator.Send(command);
+                if (result == null)
+                {
+                    return BadRequest(new { message = "Registration failed." });
+                }
+                return StatusCode(201, new { message = "Registration successful." });
             }
-            return StatusCode(201, new { message = "Registration successful." });
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An internal error occurred." });
+            }
         }
         
         [HttpPost("sign-in/admin")]
         [AllowAnonymous]
         public async Task<IActionResult> SignInAdmin([FromBody] LoginAdminCommand command)
         {
-            var response = await _mediator.Send(command);
-            if (!response.Success)
+            try
             {
-                return Unauthorized(new { message = response.Message });
+                var response = await _mediator.Send(command);
+                if (response == null) return Unauthorized(new { message = "Invalid credentials." });
+                if (!response.Success)
+                {
+                    return Unauthorized(new { message = response.Message });
+                }
+                return Ok(response);
             }
-            return Ok(response);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An internal error occurred." });
+            }
         }
         
         [HttpPost("sign-in/client")]
         [AllowAnonymous]
         public async Task<IActionResult> SignInClient([FromBody] LoginCommand command)
         {
-            var response = await _mediator.Send(command);
-            if (!response.Success)
+            try
             {
-                return Unauthorized(new { message = response.Message });
+                var response = await _mediator.Send(command);
+                if (response == null) return Unauthorized(new { message = "Invalid credentials." });
+                if (!response.Success)
+                {
+                    return Unauthorized(new { message = response.Message });
+                }
+                return Ok(response);
             }
-            return Ok(response);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An internal error occurred." });
+            }
         }
         
         [Authorize]

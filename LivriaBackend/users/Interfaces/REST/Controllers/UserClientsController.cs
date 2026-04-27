@@ -85,7 +85,11 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             try
             {
                 var userClientResource = await _mediator.Send(command);
-                
+                if (userClientResource == null)
+                {
+                    return BadRequest(new { message = "Could not create user client. Check provided data." });
+                }
+
                 return CreatedAtAction(nameof(GetUserClientById), new { id = userClientResource.Id }, userClientResource);
             }
             
@@ -122,10 +126,17 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         [ProducesResponseType(typeof(IEnumerable<UserClientResource>), 200)]
         public async Task<ActionResult<IEnumerable<UserClientResource>>> GetAllUserClients()
         {
-            var query = new GetAllUserClientQuery(); 
-            var userClients = await _userClientQueryService.Handle(query);
-            var userClientResources = _mapper.Map<IEnumerable<UserClientResource>>(userClients);
-            return Ok(userClientResources);
+            var query = new GetAllUserClientQuery();
+            try
+            {
+                var userClients = await _userClientQueryService.Handle(query);
+                var userClientResources = _mapper.Map<IEnumerable<UserClientResource>>(userClients ?? new List<Domain.Model.Aggregates.UserClient>());
+                return Ok(userClientResources);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while retrieving user clients.");
+            }
         }
 
         /// <summary>

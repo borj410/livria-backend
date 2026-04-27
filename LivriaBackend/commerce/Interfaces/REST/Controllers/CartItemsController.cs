@@ -56,15 +56,24 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         public async Task<ActionResult<CartItemResource>> CreateCartItem([FromBody] CreateCartItemResource resource)
         {
             var command = _mapper.Map<CreateCartItemCommand>(resource);
+            CartItemResource cartItemResource;
             try
             {
                 var cartItem = await _cartItemCommandService.Handle(command);
-                var cartItemResource = _mapper.Map<CartItemResource>(cartItem);
+                if (cartItem == null)
+                {
+                    return BadRequest(new { message = "Could not create cart item. Check provided data." });
+                }
+                cartItemResource = _mapper.Map<CartItemResource>(cartItem);
                 return CreatedAtAction(nameof(GetCartItemById), new { id = cartItem.Id }, cartItemResource);
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred while creating cart item: " + ex.Message });
             }
         }
 
